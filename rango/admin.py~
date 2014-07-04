@@ -5,7 +5,7 @@ from rango.models import Category, Page
 
 class PageAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'url')
-    search_fields = ['title']
+    search_field = ['title']
 
 admin.site.register(Category)
 admin.site.register(Page, PageAdmin)
