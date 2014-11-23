@@ -1,0 +1,64 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ALLOWED_HOSTS	tango_with_django_project/settings.py	/^ALLOWED_HOSTS = []$/;"	v
+BASE_DIR	tango_with_django_project/settings.py	/^BASE_DIR = os.path.dirname(os.path.dirname(__file__))$/;"	v
+Category	rango/models.py	/^class Category(models.Model):$/;"	c
+CategoryForm	rango/forms.py	/^class CategoryForm(forms.ModelForm):$/;"	c
+DATABASES	tango_with_django_project/settings.py	/^DATABASES = {$/;"	v
+DEBUG	tango_with_django_project/settings.py	/^DEBUG = True$/;"	v
+INSTALLED_APPS	tango_with_django_project/settings.py	/^INSTALLED_APPS = ($/;"	v
+LANGUAGE_CODE	tango_with_django_project/settings.py	/^LANGUAGE_CODE = 'en-us'$/;"	v
+MEDIA_ROOT	tango_with_django_project/settings.py	/^MEDIA_ROOT = os.path.join(BASE_DIR, 'media')$/;"	v
+MEDIA_URL	tango_with_django_project/settings.py	/^MEDIA_URL = '\/media\/'$/;"	v
+MIDDLEWARE_CLASSES	tango_with_django_project/settings.py	/^MIDDLEWARE_CLASSES = ($/;"	v
+Meta	rango/forms.py	/^    class Meta:$/;"	c	class:CategoryForm
+Meta	rango/forms.py	/^    class Meta:$/;"	c	class:PageForm
+Page	rango/models.py	/^class Page(models.Model):$/;"	c
+PageAdmin	rango/admin.py	/^class PageAdmin(admin.ModelAdmin):$/;"	c
+PageForm	rango/forms.py	/^class PageForm(forms.ModelForm):$/;"	c
+ROOT_URLCONF	tango_with_django_project/settings.py	/^ROOT_URLCONF = 'tango_with_django_project.urls'$/;"	v
+STATICFILES_DIRS	tango_with_django_project/settings.py	/^STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]$/;"	v
+STATIC_URL	tango_with_django_project/settings.py	/^STATIC_URL = '\/static\/'$/;"	v
+TEMPLATE_DEBUG	tango_with_django_project/settings.py	/^TEMPLATE_DEBUG = True$/;"	v
+TEMPLATE_DIRS	tango_with_django_project/settings.py	/^TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'templates')]$/;"	v
+TIME_ZONE	tango_with_django_project/settings.py	/^TIME_ZONE = 'US\/Pacific'$/;"	v
+USE_I18N	tango_with_django_project/settings.py	/^USE_I18N = True$/;"	v
+USE_L10N	tango_with_django_project/settings.py	/^USE_L10N = True$/;"	v
+USE_TZ	tango_with_django_project/settings.py	/^USE_TZ = True$/;"	v
+WSGI_APPLICATION	tango_with_django_project/settings.py	/^WSGI_APPLICATION = 'tango_with_django_project.wsgi.application'$/;"	v
+__unicode__	rango/models.py	/^    def __unicode__(self):$/;"	m	class:Category	file:
+__unicode__	rango/models.py	/^    def __unicode__(self):$/;"	m	class:Page	file:
+about	rango/views.py	/^def about(request):$/;"	f
+add_cat	populate_rango.py	/^def add_cat(name):$/;"	f
+add_category	rango/views.py	/^def add_category(request):$/;"	f
+add_page	populate_rango.py	/^def add_page(cat, title, url, views=0):$/;"	f
+add_page	rango/views.py	/^def add_page(request, category_name_url):$/;"	f
+application	tango_with_django_project/wsgi.py	/^application = get_wsgi_application()$/;"	v
+category	rango/models.py	/^    category = models.ForeignKey(Category)$/;"	v	class:Page
+category	rango/views.py	/^def category(request, category_name_url):$/;"	f
+clean	rango/forms.py	/^    def clean(self):$/;"	m	class:PageForm
+fields	rango/forms.py	/^        fields = ('title', 'url', 'views')$/;"	v	class:PageForm.Meta
+index	rango/views.py	/^def index(request):$/;"	f
+likes	rango/forms.py	/^    likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)$/;"	v	class:CategoryForm
+likes	rango/models.py	/^    likes = models.IntegerField(default=0)$/;"	v	class:Category
+list_display	rango/admin.py	/^    list_display = ('title', 'category', 'url')$/;"	v	class:PageAdmin
+model	rango/forms.py	/^        model = Category$/;"	v	class:CategoryForm.Meta
+model	rango/forms.py	/^        model = Page$/;"	v	class:PageForm.Meta
+name	rango/forms.py	/^    name = forms.CharField(max_length=128, help_text="Please enter the category name.")$/;"	v	class:CategoryForm
+name	rango/models.py	/^    name = models.CharField(max_length=128, unique=True)$/;"	v	class:Category
+populate	populate_rango.py	/^def populate():$/;"	f
+search_fields	rango/admin.py	/^    search_fields = ['title']$/;"	v	class:PageAdmin
+title	rango/forms.py	/^    title = forms.CharField(max_length=128, help_text="Please enter the title of the page.")$/;"	v	class:PageForm
+title	rango/models.py	/^    title = models.CharField(max_length=128)$/;"	v	class:Page
+url	rango/forms.py	/^    url = forms.URLField(max_length=200, help_text="Please enter the URL of the page.")$/;"	v	class:PageForm
+url	rango/models.py	/^    url = models.URLField()$/;"	v	class:Page
+urlpatterns	rango/urls.py	/^urlpatterns = patterns('',$/;"	v
+urlpatterns	tango_with_django_project/urls.py	/^urlpatterns = patterns('',$/;"	v
+views	rango/forms.py	/^    views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)$/;"	v	class:CategoryForm
+views	rango/forms.py	/^    views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)$/;"	v	class:PageForm
+views	rango/models.py	/^    views = models.IntegerField(default=0)$/;"	v	class:Category
+views	rango/models.py	/^    views = models.IntegerField(default=0)$/;"	v	class:Page

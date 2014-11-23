@@ -11,14 +11,14 @@ def category(request, category_name_url):
     context_dict = {'category_name': category_name}
     try:
         category = Category.objects.get(name=category_name)
-        category.url = category_name_url
+#        category.url = category_name_url
         pages = Page.objects.filter(category=category)
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
         pass
     return render_to_response('rango/category.html', context_dict, context)
-'''    
+'''
 def pages(request, page_name_url):
     context = RequestContext(request)
     page_name = page_name_url.replace('_', ' ')
@@ -34,7 +34,36 @@ def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
+    # A HTTP POST?
+    if request.method == 'POST':
+        cform = CategoryForm(request.POST)
+        pform = PageForm(request.POST)
 
+        # Have we been provided with a valid form?
+        if cform.is_valid() and  pform.is_valid():
+            # Save the new category to the database.
+            cform.save(commit=True)
+            pform.save(commit=True)
+
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            return index(request)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print cform.errors
+            print pform.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        cform = CategoryForm()
+        pform = PageForm()
+
+    context_dicts = {'cform': cform, 'pform': pform}
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+#    return render_to_response('rango/index.html', {'form': form}, context)
+    return render_to_response('rango/index.html', context_dicts, context)
+
+'''
     # Construct a dictionary to pass to the template engine as its context.
     # Note the key boldmessage is the same as {{ boldmessage }} in the template!
     category_list = Category.objects.order_by('-likes')[:5]
@@ -51,13 +80,12 @@ def index(request):
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.
     return render_to_response('rango/index.html', context_dicts, context)
-
+'''
 def about(request):
     context = RequestContext(request)
     context_dict = {'boldmessage': "I am bold font in the about page"}
     return render_to_response('rango/about.html', context_dict, context)
 #    return HttpResponse("This is about page. <a href='/rango/index'>Index</a>")
-
 
 def add_category(request):
     # Get the context from the request.

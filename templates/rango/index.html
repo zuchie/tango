@@ -11,6 +11,47 @@
     <body>
         <h1>Rango says...hello world!</h1>
         <img src ="{% static "rango.jpg" %}" alt ="Pic of Rango" /> <!-- New line --> 
+
+        <form id="category_form" method="post" action="">
+
+            {% csrf_token %}
+<!--
+            {% for hidden in cform.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+-->
+            {% for field in cform.visible_fields %}
+<!--
+                {{ field.errors }}
+-->
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Search" />
+        </form>
+        <form id="page_form" method="post" action="/rango/add_category/">
+
+            {% csrf_token %}
+<!--
+            {% for hidden in pform.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+-->
+            {% for field in pform.visible_fields %}
+<!--
+                {{ field.errors }}
+-->
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="submit" value="Modify" />
+        </form>
+<!--
+	<a href="/rango/add_category/">Add a New Category</a>        
+-->
+<!--
         {% if categories %}
             <ul>
                 {% for category in categories %}
@@ -32,5 +73,6 @@
         {% endif %}
 
 	<a href="/rango/add_category/">Add a New Category</a>        
+-->
     </body>
 </html>
