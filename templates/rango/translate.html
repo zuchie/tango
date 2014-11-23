@@ -9,10 +9,9 @@
     </head>
 
     <body>
-        <h1>Rango says...hello world!</h1>
-        <img src ="{% static "rango.jpg" %}" alt ="Pic of Rango" /> <!-- New line --> 
+        <h1>Rango says...translate!</h1>
 
-        <form id="form" method="post" action="">
+        <form id="form" method="" action="">
 
             {% csrf_token %}
 <!--
@@ -20,19 +19,19 @@
                 {{ hidden }}
             {% endfor %}
 -->
-
             {% for field in form.visible_fields %}
                 {{ field.errors }}
                 {{ field.help_text }}
-                {{ field }}
+                {{ field.data }}
             {% endfor %}
+
 <!--
             <p><label for="text">Txt:</label>
                 <input id="text" type="text" name="txt" maxlength="100" /></p>
             <p><label for="trans">Trans:</label>
                 <input type="text" name="trans" id="translate" /></p>
 -->
-            <input type="submit" name="submit" value="Translate" />
+            <input type="submit" name="submit" value="Back" />
         </form>
 
 <!--

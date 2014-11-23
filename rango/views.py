@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Dict 
-from rango.forms import TextForm, TransForm
+from rango.forms import DictForm
 
 def index(request):
     # Request the context of the request.
@@ -10,39 +10,35 @@ def index(request):
     context = RequestContext(request)
     # A HTTP POST?
     if request.method == 'POST':
-        form = TextForm(request.POST)
+        form = DictForm(request.POST)
+        final_form = DictForm()
 
+#        print form.__dict__['data']['text']
+#        print form.data['text'] # use form.__dict__ to see what info can be access
         # Have we been provided with a valid form?
-        if form.is_valid():
+        if form.data['text']:
+            txt = form.data['text']
             # Save the new category to the database.
 #            form.save(commit=True)
-            txt = form.cleaned_data['text']
+#            txt = form.cleaned_data['text']
             # Now call the index() view.
             # The user will be shown the homepage.
-            print txt 
-
+#            print form.data['translation']
+#            print form.data['text'] # use form.__dict__ to see what info can be access
+#            print Dict.objects.all()
+            dic = Dict.objects.get(text = txt)
+#            print dic.translation
+            final_form.data['text'] = txt 
+            final_form.data['translation'] = dic.translation
+#            print final_form.data
 #            return index(request)
-            return render_to_response('', {'form': form}, context)
+            return render_to_response('rango/translate.html', {'form': final_form}, context)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        form = TransForm(request.GET)
-        # Have we been provided with a valid form?
-        if form.is_valid():
-            # Save the new category to the database.
-#            form.save(commit=True)
-            trans = form.cleaned_data['translation']
-            # Now call the index() view.
-            # The user will be shown the homepage.
-            print trans 
-
-#            return index(request)
-            return render_to_response('', {'form': form}, context)
-        else:
-            # The supplied form contained errors - just print them to the terminal.
-            print form.errors
+        form = DictForm()
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
