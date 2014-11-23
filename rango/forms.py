@@ -1,31 +1,16 @@
 from django import forms
-from rango.models import Page, Category
+from rango.models import Dict 
 
-class CategoryForm(forms.ModelForm):
-    name = forms.CharField(max_length=128, help_text="Word")
-    views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-    likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
+class DictForm(forms.ModelForm):
+    text = forms.CharField(max_length=1024, help_text="Text")
+    translation = forms.CharField(max_length=1024, help_text="Translation")
 
     # An inline class to provide additional information on the form.
     class Meta:
         # Provide an association between the ModelForm and a model
-        model = Category
+        model = Dict
+        fields = ('text',)
 
-class PageForm(forms.ModelForm):
-    title = forms.CharField(max_length=1024, help_text="Definition")
-#    url = forms.URLField(max_length=200, help_text="Please enter the URL of the page.")
-#    views = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-
-    class Meta:
-        # Provide an association between the ModelForm and a model
-        model = Page
-
-        # What fields do we want to include in our form?
-        # This way we don't need every field in the model present.
-        # Some fields may allow NULL values, so we may not want to include them...
-        # Here, we are hiding the foreign key.
-        fields = ('title',)
-'''
     def clean(self):
         cleaned_data = self.cleaned_data
         url = cleaned_data.get('url')
@@ -36,4 +21,3 @@ class PageForm(forms.ModelForm):
             cleaned_data['url'] = url
 
         return cleaned_data
-'''

@@ -1,10 +1,9 @@
 from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from rango.models import Category, Page
-from rango.forms import CategoryForm
-from rango.forms import PageForm
-
+from rango.models import Dict 
+from rango.forms import DictForm
+'''
 def category(request, category_name_url):
     context = RequestContext(request)
     category_name = category_name_url.replace('_', ' ')
@@ -18,6 +17,7 @@ def category(request, category_name_url):
     except Category.DoesNotExist:
         pass
     return render_to_response('rango/category.html', context_dict, context)
+'''
 '''
 def pages(request, page_name_url):
     context = RequestContext(request)
@@ -36,32 +36,26 @@ def index(request):
     context = RequestContext(request)
     # A HTTP POST?
     if request.method == 'POST':
-        cform = CategoryForm(request.POST)
-        pform = PageForm(request.POST)
+        form = DictForm(request.POST)
 
         # Have we been provided with a valid form?
-        if cform.is_valid() and  pform.is_valid():
+        if form.is_valid():
             # Save the new category to the database.
-            cform.save(commit=True)
-            pform.save(commit=True)
+            form.save(commit=True)
 
             # Now call the index() view.
             # The user will be shown the homepage.
             return index(request)
         else:
             # The supplied form contained errors - just print them to the terminal.
-            print cform.errors
-            print pform.errors
+            print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        cform = CategoryForm()
-        pform = PageForm()
+        form = DictForm()
 
-    context_dicts = {'cform': cform, 'pform': pform}
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
-#    return render_to_response('rango/index.html', {'form': form}, context)
-    return render_to_response('rango/index.html', context_dicts, context)
+    return render_to_response('rango/index.html', {'form': form}, context)
 
 '''
     # Construct a dictionary to pass to the template engine as its context.
@@ -80,6 +74,7 @@ def index(request):
     # We make use of the shortcut function to make our lives easier.
     # Note that the first parameter is the template we wish to use.
     return render_to_response('rango/index.html', context_dicts, context)
+'''
 '''
 def about(request):
     context = RequestContext(request)
@@ -155,4 +150,4 @@ def add_page(request, category_name_url):
             {'category_name_url': category_name_url,
              'category_name': category_name, 'form': form},
              context)
-
+'''
