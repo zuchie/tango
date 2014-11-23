@@ -2,56 +2,47 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Dict 
-from rango.forms import DictForm
-'''
-def category(request, category_name_url):
-    context = RequestContext(request)
-    category_name = category_name_url.replace('_', ' ')
-    context_dict = {'category_name': category_name}
-    try:
-        category = Category.objects.get(name=category_name)
-#        category.url = category_name_url
-        pages = Page.objects.filter(category=category)
-        context_dict['pages'] = pages
-        context_dict['category'] = category
-    except Category.DoesNotExist:
-        pass
-    return render_to_response('rango/category.html', context_dict, context)
-'''
-'''
-def pages(request, page_name_url):
-    context = RequestContext(request)
-    page_name = page_name_url.replace('_', ' ')
-    context_dict = {'page_name': page_name}
-    try:
-        pages = Page.objects.get(title=page_name)
-        context_dict['pages'] = pages
-    except Page.DoesNotExist:
-        pass
-    return render_to_response('rango/page.html', context_dict, context)
-'''
+from rango.forms import TextForm, TransForm
+
 def index(request):
     # Request the context of the request.
     # The context contains information such as the client's machine details, for example.
     context = RequestContext(request)
     # A HTTP POST?
     if request.method == 'POST':
-        form = DictForm(request.POST)
+        form = TextForm(request.POST)
 
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database.
-            form.save(commit=True)
-
+#            form.save(commit=True)
+            txt = form.cleaned_data['text']
             # Now call the index() view.
             # The user will be shown the homepage.
-            return index(request)
+            print txt 
+
+#            return index(request)
+            return render_to_response('', {'form': form}, context)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
     else:
         # If the request was not a POST, display the form to enter details.
-        form = DictForm()
+        form = TransForm(request.GET)
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+#            form.save(commit=True)
+            trans = form.cleaned_data['translation']
+            # Now call the index() view.
+            # The user will be shown the homepage.
+            print trans 
+
+#            return index(request)
+            return render_to_response('', {'form': form}, context)
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
 
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
