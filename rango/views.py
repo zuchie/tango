@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from rango.models import Dict 
@@ -25,14 +26,17 @@ def index(request):
             # The user will be shown the homepage.
 #            print form.data['translation']
 #            print form.data['text'] # use form.__dict__ to see what info can be access
-#            print Dict.objects.all()
-            dic = Dict.objects.get(text = txt)
+            if Dict.objects.filter(text = txt).exists() == True:
+                dic = Dict.objects.get(text = txt)
 #            print dic.translation
-            final_form.data['text'] = txt 
-            final_form.data['translation'] = dic.translation
+                final_form.data['text'] = txt 
+                final_form.data['translation'] = dic.translation
+                return render_to_response('rango/translate.html', {'form': final_form}, context)
+            else: # text not in dic, create one
+                return render_to_response('rango/add_item.html', {'form': form}, context)
+                
 #            print final_form.data
 #            return index(request)
-            return render_to_response('rango/translate.html', {'form': final_form}, context)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -43,6 +47,35 @@ def index(request):
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('rango/index.html', {'form': form}, context)
+
+def add_item(request):
+    # Get the context from the request.
+    context = RequestContext(request)
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = DictForm(request.POST)
+
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            # Save the new category to the database.
+            form.save(commit=True)
+
+            # Now call the index() view.
+            # The user will be shown the homepage.
+#            return index(request)
+            return HttpResponseRedirect('/rango')
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = DictForm()
+
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('rango/index.html', {'form': form}, context)
+
 
 '''
     # Construct a dictionary to pass to the template engine as its context.
