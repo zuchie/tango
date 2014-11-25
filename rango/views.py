@@ -76,6 +76,35 @@ def add_item(request):
     # Render the form with error messages (if any).
     return render_to_response('rango/index.html', {'form': form}, context)
 
+def modify_item(request):
+    # Get the context from the request.
+    context = RequestContext(request)
+
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = DictForm(request.POST)
+        # Have we been provided with a valid form?
+        print "I'm here"
+        print form.data
+        if form.is_valid():
+            # Save the new category to the database.
+#            form.save(commit=True)
+            print "modify item"
+            # Now call the index() view.
+            # The user will be shown the homepage.
+#            return index(request)
+            return HttpResponseRedirect('/rango/modify_item/')
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = DictForm()
+
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('rango/index.html', {'form': form}, context)
+
 
 '''
     # Construct a dictionary to pass to the template engine as its context.

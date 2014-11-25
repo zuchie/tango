@@ -34,6 +34,13 @@
             <input type="submit" name="submit" value="Back" />
         </form>
 
+        <form id="form" method="post" action="/rango/modify_item/">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+            {% endfor %}
+            <input type="submit" name="submit" value="Modify definition" />
+        </form>
+
 <!--
 	<a href="/rango/add_category/">Add a New Category</a>        
 -->
