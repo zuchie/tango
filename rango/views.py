@@ -76,24 +76,54 @@ def add_item(request):
     # Render the form with error messages (if any).
     return render_to_response('rango/index.html', {'form': form}, context)
 
+def translate_modify(request):
+    # Request the context of the request.
+    # The context contains information such as the client's machine details, for example.
+    context = RequestContext(request)
+    # A HTTP POST?
+    if request.method == 'POST':
+        form = DictForm(request.POST)
+        print form.data
+        print 'BACK0'
+        # Have we been provided with a valid form?
+        if form.is_valid():
+            print 'BACK'
+            if 'back' in form.data:
+                return HttpResponseRedirect('/rango/')
+            elif 'modify' in form.data:
+                return render_to_response('/rango/modify_item.html', {'form': form}, context)
+               
+        else:
+            # The supplied form contained errors - just print them to the terminal.
+            print form.errors
+    else:
+        # If the request was not a POST, display the form to enter details.
+        form = DictForm()
+
+    # Bad form (or form details), no form supplied...
+    # Render the form with error messages (if any).
+    return render_to_response('rango/index.html', {'form': form}, context)
+
+
 def modify_item(request):
     # Get the context from the request.
     context = RequestContext(request)
 
     # A HTTP POST?
-    if request.method == 'POST':
-        form = DictForm(request.POST)
+    if request.method == 'GET':
+        form = DictForm(request.GET)
+        new_form = DictForm()
         # Have we been provided with a valid form?
-        print "I'm here"
-        print form.data
         if form.is_valid():
             # Save the new category to the database.
 #            form.save(commit=True)
-            print "modify item"
+            Dict.objects.filter(text = form.data['text']).delete()
+            form.save(commit=True)
+#            new_form.save()
             # Now call the index() view.
             # The user will be shown the homepage.
 #            return index(request)
-            return HttpResponseRedirect('/rango/modify_item/')
+            return HttpResponseRedirect('/rango/')
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors

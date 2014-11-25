@@ -11,7 +11,7 @@
     <body>
         <h1>Rango says...translate!</h1>
 
-        <form id="form" method="" action="">
+        <form id="form" method="" action="/rango/">
 
             {% csrf_token %}
 <!--
@@ -25,21 +25,26 @@
                 {{ field.data }}
             {% endfor %}
 
-<!--
-            <p><label for="text">Txt:</label>
-                <input id="text" type="text" name="txt" maxlength="100" /></p>
-            <p><label for="trans">Trans:</label>
-                <input type="text" name="trans" id="translate" /></p>
--->
-            <input type="submit" name="submit" value="Back" />
+            <input type="submit" name="back" value="Back" />
         </form>
 
-        <form id="form" method="post" action="/rango/modify_item/">
+        <form id="modify_form" method="get" action="/rango/modify_item">
+
             {% csrf_token %}
-            {% for field in form.visible_fields %}
+<!--
+            {% for hidden in cform.hidden_fields %}
+                {{ hidden }}
             {% endfor %}
-            <input type="submit" name="submit" value="Modify definition" />
+-->
+            {% for field in form.visible_fields %}
+                {{ field.errors }}
+                {{ field.help_text }}
+                {{ field }}
+            {% endfor %}
+
+            <input type="submit" name="modify" value="Modify definition" />
         </form>
+
 
 <!--
 	<a href="/rango/add_category/">Add a New Category</a>        
