@@ -5,34 +5,39 @@
 <html>
 
     <head>
-        <title>Rango</title>
+        <title>Dict</title>
     </head>
 
     <body>
-        <h1>Rango says...translate!</h1>
+        <h1>translate</h1>
 
         <form id="form" method="" action="/rango/">
 
             {% csrf_token %}
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field.data }}
-            {% endfor %}
-
+	    {{ form.text.errors }}
+	    {{ form.text.data }}
+	    <label><--></label>
+	    {{ form.translation.errors }}
+	    {{ form.translation.data }}
             <input type="submit" name="back" value="Back" />
+
         </form>
+
+        <br />
 
         <form id="modify_form" method="get" action="/rango/modify_item">
 
             {% csrf_token %}
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
+	    <div>
+		<label>Replace translation:</label>
+	    </div>
+                {{ form.text.errors }}
+                {{ form.text }}
+		<label><--></label>
+                {{ form.translation.errors }}
+                {{ form.translation }}
+            <input type="submit" name="modify" value="Replace" />
 
-            <input type="submit" name="modify" value="Modify definition" />
         </form>
 
     </body>

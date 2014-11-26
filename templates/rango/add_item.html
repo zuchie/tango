@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Rango</title>
+        <title>Dict</title>
     </head>
 
     <body>
-        <h1>Add an item</h1>
+        <h1>add a new item</h1>
 
         <form id="add_item_form" method="post" action="/rango/add_item/">
 
             {% csrf_token %}
-            {% for field in form.visible_fields %}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
+	    {{ form.text.errors }}
+	    {{ form.text }}
+	    <label><--></label>
+	    {{ form.translation }}
+	    <input type="submit" name="submit" value="Add" />
 
-            <input type="submit" name="submit" value="Insert new item" />
         </form>
 
     </body>

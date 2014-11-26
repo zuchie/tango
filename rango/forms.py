@@ -2,8 +2,8 @@ from django import forms
 from rango.models import Dict 
 
 class DictForm(forms.ModelForm):
-    text = forms.CharField(max_length=1024, help_text="Text")
-    translation = forms.CharField(max_length=1024, help_text="Translation")
+    text = forms.CharField(max_length=1024, help_text="")
+    translation = forms.CharField(max_length=1024, help_text="")
 
     # An inline class to provide additional information on the form.
     class Meta:
