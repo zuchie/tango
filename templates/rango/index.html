@@ -26,40 +26,8 @@
                 {{ field.help_text }}
                 {{ field }}
             {% endfor %}
-<!--
-            <p><label for="text">Txt:</label>
-                <input id="text" type="text" name="txt" maxlength="100" /></p>
-            <p><label for="trans">Trans:</label>
-                <input type="text" name="trans" id="translate" /></p>
--->
+
             <input type="submit" name="submit" value="Translate" />
         </form>
-
-<!--
-	<a href="/rango/add_category/">Add a New Category</a>        
--->
-<!--
-        {% if categories %}
-            <ul>
-                {% for category in categories %}
-                <li><a href="/rango/category/{{ category.url }}">{{ category.name }}</a></li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no categories present.</strong>
-        {% endif %}
-
-        {% if pages %}
-            <ul>
-                {% for page in pages %}
-                <li><a href="{{ page.url }}">{{ page.title }}</a></li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>There are no pages present.</strong>
-        {% endif %}
-
-	<a href="/rango/add_category/">Add a New Category</a>        
--->
     </body>
 </html>
