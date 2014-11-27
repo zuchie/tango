@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+{% load static %} <!-- New line -->
+
+<html>
+
+    <head>
+        <title>Dict</title>
+    </head>
+
+    <body>
+
+        <form id="form" method="get" action="/rango/modify_item/">
+            <tr>
+                {% csrf_token %}
+                {{ form.data.text }}
+                {{ form.data.translation }}
+            </tr>
+            <input type="submit" name="modify" value="Modify" />
+        </form>
+
+
+    </body>
+
+</html>

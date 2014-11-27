@@ -9,20 +9,9 @@
     </head>
 
     <body>
-        <h1>translate</h1>
 
-        <form id="form" method="" action="/rango/">
-
-            {% csrf_token %}
-	    {{ form.text.errors }}
-	    {{ form.text.data }}
-	    <label><--></label>
-	    {{ form.translation.errors }}
-	    {{ form.translation.data }}
-            <input type="submit" name="back" value="Back" />
-
-        </form>
-
+	{{ trans }}
+	{{ form }}
         <br />
 
         <form id="modify_form" method="get" action="/rango/modify_item">
@@ -31,6 +20,8 @@
 	    <div>
 		<label>Replace translation:</label>
 	    </div>
+
+		{{ trans }}
                 {{ form.text.errors }}
                 {{ form.text }}
 		<label><--></label>

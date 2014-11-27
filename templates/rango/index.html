@@ -9,29 +9,23 @@
     </head>
 
     <body>
-<!--
-        <h1>Dict says...hello world!</h1>
--->    
-        <img src ="{% static "dict.jpg" %}" alt ="Pic of Dict" /> <!-- New line --> 
+        <img src ="{% static "dict.jpg" %}" alt ="Pic of Dict" /> 
 
         <form id="form" method="post" action="">
 
             {% csrf_token %}
-<!--
-            {% for hidden in cform.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
+			{{ form.text.errors }}
+			{{ form.text }}
 
-            {% for field in form.visible_fields %}
-                {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
-            {% endfor %}
--->
-	    {{ form.text.errors }}
-	    {{ form.text }}
-
-            <input type="submit" name="submit" value="Translate" />
+            <input type="submit" name="translate" value="Translate" />
         </form>
+
+		<br/>
+
+			{% load dict_trans %}
+			{% get_dict trans_form.data.text %}
+
+
+
     </body>
 </html>
