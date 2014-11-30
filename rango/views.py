@@ -16,13 +16,15 @@ def index(request):
         trans_form = DictForm()
 
         # Have we been provided with a valid form 'text' field?
-        if form.data['text']:
+#        if form.data['text']:
+        if 'translate' in request.POST:
             txt = form.data['text']
             # Is provided 'text' already in dictionary?
             if Dict.objects.filter(text = txt).exists() == True:
                 trans = Dict.objects.get(text = txt).translation
                 trans_form.data['text'] = txt
                 trans_form.data['translation'] = trans
+                print trans_form.data['translation']
                 return render_to_response('rango/index.html', {'form': form, 'trans_form': trans_form}, context)
 #                dict_template = 'rango/translate.html'
 #                my_dict = Dict.objects.get(text = txt) 
@@ -32,6 +34,9 @@ def index(request):
                 dict_template = 'rango/add_item.html'
                 dict_form = form
                 return render_to_response(dict_template, {'form': dict_form}, context)
+        elif 'modify' in request.POST:
+            dict_template = 'rango/modify_item.html'
+            return render_to_response(dict_template, {'form': form}, context)
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
@@ -74,7 +79,6 @@ def modify_item(request):
     # Get the context from the request.
     context = RequestContext(request)
 
-    print request.GET.__dict__
     # A HTTP GET?
     if request.method == 'GET':
         form = DictForm(request.GET)

@@ -22,10 +22,17 @@
 
 		<br/>
 
-			{% load dict_trans %}
-			{% get_dict trans_form.data.text %}
+		{% if trans_form.data.text %}
 
+			<form id="form" method="post" action="">
 
+				{% csrf_token %}
+				{{ trans_form.data.translation }}
+
+				<input type="submit" name="modify" value="Modify" />
+			</form>
+
+		{% endif %}
 
     </body>
 </html>
