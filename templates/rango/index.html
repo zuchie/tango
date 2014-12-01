@@ -11,7 +11,7 @@
     <body>
         <img src ="{% static "dict.jpg" %}" alt ="Pic of Dict" /> 
 
-        <form id="form" method="post" action="">
+        <form id="form" method="get" action="">
 
             {% csrf_token %}
 			{{ form.text.errors }}
@@ -24,7 +24,7 @@
 
 		{% if trans_form.data.text %}
 
-			<form id="form" method="post" action="">
+			<form id="form" method="get" action="">
 
 				{% csrf_token %}
 				{{ trans_form.data.translation }}
