@@ -30,10 +30,7 @@ def index(request):
                     trans_form.data['text'] = txt
                     trans_form.data['translation'] = trans
                     return render_to_response('rango/index.html', {'form': form, 'trans_form': trans_form}, context)
-#                dict_template = 'rango/translate.html'
-#                my_dict = Dict.objects.get(text = txt) 
-#                return render_to_response(dict_template, {'dict': my_dict}, context)
-            # Text not in dic, add it into dic.
+                # Text not in dic, add it into dic.
                 else: 
                     dict_template = 'rango/add_item.html'
                     dict_form = form
