@@ -13,40 +13,43 @@ def index(request):
     # A HTTP POST?
     if request.method == 'POST':
         form = DictForm()
+    # GET
     else:
-        form = DictForm(request.GET)
-        trans_form = DictForm()
+        # Make form mutable.
+        mutable_req_POST = request.GET.copy()
+        form = DictForm(mutable_req_POST)
 
-        # Have we been provided with a valid form 'text' field?
-#        if form.data['text']:
+        # Has 'translate' button been clicked?
         if 'translate' in request.GET:
-            request.session['_old_get'] = request.GET
-            txt = form.data['text']
+            # Save mutable request.GET for other views.
+            request.session['_old_get'] = mutable_req_POST
+            # Get text from user input and strip leading/trailing whitespaces.
+            text_input = form.data['text'].strip()
             # Is it a blank input?
-            if txt: 
+            if text_input: 
                 # Is provided 'text' already in dictionary?
-                if Dict.objects.filter(text = txt).exists() == True:
-                    trans = Dict.objects.get(text = txt).translation
-                    trans_form.data['text'] = txt
-                    trans_form.data['translation'] = trans
-                    return render_to_response('rango/index.html', {'form': form, 'trans_form': trans_form}, context)
+                if Dict.objects.filter(text = text_input).exists() == True:
+                    form.data['translation'] = Dict.objects.get(text = text_input).translation
+                    template = 'rango/index.html'
                 # Text not in dic, add it into dic.
                 else: 
-                    dict_template = 'rango/add_item.html'
-                    dict_form = form
-                    return render_to_response(dict_template, {'form': dict_form}, context)
-            # a blank input
+                    form.data['text'] = form.data['text'].strip()
+                    template = 'rango/add_item.html'
+
+                return render_to_response(template, {'form': form}, context)
+            # A blank input, show form.
             else:
                 form = DictForm()
 
+        # Has 'modify' button been clicked?
         elif 'modify' in request.GET:
+            # Get text.
             old_get = request.session.get('_old_get')
-            txt = old_get['text']
-            trans = Dict.objects.get(text = txt).translation
-            trans_form.data['text'] = txt 
-            trans_form.data['translation'] = trans 
-            dict_template = 'rango/modify_item.html'
-            return render_to_response(dict_template, {'form': trans_form}, context)
+            text_input = old_get['text'].strip()
+            form.data['text'] = text_input 
+            form.data['translation'] = Dict.objects.get(text = text_input).translation
+            template = 'rango/modify_item.html'
+            return render_to_response(template, {'form': form}, context)
 
         else:
             # The supplied form contained errors - just print them to the terminal.
@@ -104,7 +107,7 @@ def modify_item(request):
 #        if form.is_valid():
         if Dict.objects.filter(text = txt).exists() == True:
             form.data['text'] = txt
-            form.data['translation'] = trans
+            form.data['translation'] = trans.strip()
             # Delete original.
             Dict.objects.filter(text = txt).delete()
             # Save new.
@@ -114,12 +117,6 @@ def modify_item(request):
         else:
             # The supplied form contained errors - just print them to the terminal.
             print form.errors
-    # GET 
-    elif request.method == 'GET':
-        form = DictForm(request.GET)
-        print form.data
-        if form.is_valid():
-            return render_to_response('rango/modify_item.html', {'form': form}, context)
     else:
         # If the request was not a POST, display the form to enter details.
         form = DictForm()

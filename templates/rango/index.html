@@ -14,25 +14,27 @@
         <form id="form" method="get" action="">
 
             {% csrf_token %}
-			{{ form.text.errors }}
-			{{ form.text }}
+<!--
+	    {{ form.text.errors }}
+-->
+	    {{ form.text }}
 
             <input type="submit" name="translate" value="Translate" />
         </form>
 
-		<br/>
+	<br/>
 
-		{% if trans_form.data.text %}
+	{% if form.data.text %}
 
-			<form id="form" method="get" action="">
+	    <form id="form" method="get" action="">
 
-				{% csrf_token %}
-				{{ trans_form.data.translation }}
+		{% csrf_token %}
+		{{ form.data.translation }}
 
-				<input type="submit" name="modify" value="Modify" />
-			</form>
+		<input type="submit" name="modify" value="Modify" />
+	    </form>
 
-		{% endif %}
+	{% endif %}
 
     </body>
 </html>

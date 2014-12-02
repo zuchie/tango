@@ -11,13 +11,14 @@ class DictForm(forms.ModelForm):
         model = Dict
         fields = ('text', 'translation') 
 
-    def clean(self):
+    # Return cleaned data.
+    def clean_text(self):
         cleaned_data = self.cleaned_data
-        url = cleaned_data.get('url')
-
-        # If url is not empty and doesn't start with 'http://', prepend 'http://'.
-        if url and not url.startswith('http://'):
-            url = 'http://' + url
-            cleaned_data['url'] = url
-
-        return cleaned_data
+        text = cleaned_data.get('text')
+        # If text has trailing or leading whitespaces, trim them. 
+        return text.strip() 
+    def clean_translation(self):
+        cleaned_data = self.cleaned_data
+        translation = cleaned_data.get('translation')
+        # If translation has trailing or leading whitespaces, trim them. 
+        return translation.strip() 

@@ -10,7 +10,9 @@
         <form id="form" method="post" action="/rango/modify_item/">
 
             {% csrf_token %}
+<!--
             {{ form.text.errors }}
+-->
             {{ form.data.text }}
             <br/>
             <br/>
