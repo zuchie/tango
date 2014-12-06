@@ -11,7 +11,7 @@
     <body>
         <img src ="{% static "dict.jpg" %}" alt ="Pic of Dict" /> 
 
-        <form id="form" method="get" action="">
+        <form id="form" method="get" action="/rango/translate/">
 
             {% csrf_token %}
 <!--
@@ -26,11 +26,11 @@
 
 	{% if form.data.text %}
 
-	    <form id="form" method="get" action="">
+	    <form id="form" method="post" action="/rango/modify/{{ form.data.translation }}/">
 
 		{% csrf_token %}
 		{{ form.data.translation }}
-
+		
 		<input type="submit" name="modify" value="Modify" />
 	    </form>
 

@@ -7,7 +7,7 @@
     <body>
         <h1>modify item</h1>
 
-        <form id="form" method="post" action="/rango/modify_item/">
+        <form id="form" method="post" action="/rango/modify/{{ form.data.text }}/">
 
             {% csrf_token %}
 <!--
