@@ -14,9 +14,6 @@
         <form id="form" method="get" action="/rango/translate/">
 
             {% csrf_token %}
-<!--
-	    {{ form.text.errors }}
--->
 	    {{ form.text }}
 
             <input type="submit" name="translate" value="Translate" />
