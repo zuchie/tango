@@ -21,4 +21,6 @@ class DictForm(forms.ModelForm):
         cleaned_data = self.cleaned_data
         translation = cleaned_data.get('translation')
         # If translation has trailing or leading whitespaces, trim them. 
-        return translation.strip() 
+        return translation.strip()
+    def striped_text(self):
+        return self.data.get('text').strip()

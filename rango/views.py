@@ -22,30 +22,7 @@ def index(request):
             print form.errors
 
     else:
-        # Make form mutable.
-        mutable_req_GET = request.GET.copy()
-        form = DictForm(mutable_req_GET)
-#        form = DictForm(request.GET)
-#        trans_form = DictForm()
-
-        # Has 'translate' button been clicked?
-        if 'translate' in request.GET:
-            # Save mutable request.GET for other views.
-#            request.session['_old_get'] = mutable_req_POST
-            # Get text from user input and strip leading/trailing whitespaces.
-            text_input = form.data['text'].strip()
-            # Is it a blank input?
-            if text_input: 
-                # Is provided 'text' already in dictionary?
-                if Dict.objects.filter(text = text_input).exists() == True:
-#                    trans_form.data['translation'] = Dict.objects.get(text = text_input).translation
-                    form.data['translation'] = Dict.objects.get(text = text_input).translation
-#                    trans_form.data['text'] = text_input 
-                    template = 'rango/index.html'
-
-                return render_to_response(template, {'form': form}, context)
-
-#        form = DictForm()
+        form = DictForm()
     # Bad form (or form details), no form supplied...
     # Render the form with error messages (if any).
     return render_to_response('rango/index.html', {'form': form}, context)
@@ -67,19 +44,26 @@ def translate_item(request):
         # Has 'translate' button been clicked?
         if 'translate' in req:
             # Get text from user input and strip leading/trailing whitespaces.
-            txt = form.data['text'].strip()
+            txt_in = form.data['text'].strip()
+#            txt = form.striped_text
             # Is it a blank input?
-            if txt: 
-                # Is provided 'text' already in dictionary?
-                if Dict.objects.filter(text = txt).exists() == True:
-                    trans = Dict.objects.get(text = txt).translation
-                    form.fields['text'].value = txt
-                    form.data['translation'] = trans 
+            if txt_in: 
+                # Is provided 'text' already in dictionary text field?
+                if Dict.objects.filter(text = txt_in).exists() == True:
+                    txt_out = Dict.objects.get(text = txt_in).translation
+                    form.fields['text'].value = txt_in
+                    form.data['translation'] = txt_out 
 #                    print form.is_valid() # Why is form not valid here???
+                    template = 'rango/index.html'
+                 # Is provided 'text' already in dictionary translation field?
+                elif Dict.objects.filter(translation = txt_in).exists() == True:
+                    txt_out = Dict.objects.get(translation = txt_in).text
+                    form.fields['text'].value = txt_in
+                    form.data['translation'] = txt_out
                     template = 'rango/index.html'
                 # Text not in dic, add it into dic.
                 else: 
-                    form.data['text'] = txt
+                    form.data['text'] = txt_in
                     template = 'rango/add_item.html'
 
                 return render_to_response(template, {'form': form}, context)
