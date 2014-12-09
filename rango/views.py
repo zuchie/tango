@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from rango.models import Dict 
 from rango.forms import DictForm
 from django.template.defaulttags import register
+import re
 
 def index(request):
     # Request the context of the request.
@@ -47,16 +48,16 @@ def translate_item(request):
             txt_in = form.data['text'].strip()
 #            txt = form.striped_text
             # Is it a blank input?
-            if txt_in: 
-                # Is provided 'text' already in dictionary text field?
-                if Dict.objects.filter(text = txt_in).exists() == True:
+            if txt_in:
+                # Input text is not in Roman character and provided 'text' already in dictionary text field. Encode to utf-8 to make Chinese char show in Chinese.
+                if txt_in.encode('utf8').isalpha() == False and Dict.objects.filter(text = txt_in).exists() == True:
                     txt_out = Dict.objects.get(text = txt_in).translation
                     form.fields['text'].value = txt_in
                     form.data['translation'] = txt_out 
 #                    print form.is_valid() # Why is form not valid here???
                     template = 'rango/index.html'
-                 # Is provided 'text' already in dictionary translation field?
-                elif Dict.objects.filter(translation = txt_in).exists() == True:
+                # Input text is in Roman character and provided 'text' already in dictionary translation field. is_alpha() cannot tell '/' or ',', so use regex instead here.
+                elif re.match(r'[a-zA-Z]', txt_in.encode('utf8')) and Dict.objects.filter(translation = txt_in).exists() == True:
                     txt_out = Dict.objects.get(translation = txt_in).text
                     form.fields['text'].value = txt_in
                     form.data['translation'] = txt_out
