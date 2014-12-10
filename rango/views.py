@@ -67,7 +67,7 @@ def translate_item(request):
                     form.data['text'] = txt_in
                     template = 'rango/add_item.html'
 
-                return render_to_response(template, {'form': form}, context)
+		return render_to_response(template, {'form': form}, context)
             # A blank input, show form.
             else:
                 form = DictForm()
@@ -115,15 +115,20 @@ def modify_item(request, input_text):
     if request.method == 'POST':
         req = request.POST
         form = DictForm(req)
-        trans = input_text
-        if Dict.objects.filter(translation = trans).exists() == True:
-            txt = Dict.objects.get(translation = trans).text
- 
+#        if Dict.objects.filter(translation = trans).exists() == True:
+        if input_text.encode('utf8').isalpha() == False and Dict.objects.filter(text = input_text).exists() == True:
+            txt = input_text
+            trans = Dict.objects.get(text = input_text).translation
+
+        elif re.match(r'[a-zA-Z]', txt_in.encode('utf8')) and Dict.objects.filter(translation = txt_in).exists() == True:
+            trans = input_text
+            txt = Dict.objects.get(translation = input_text).text
+        else:
+            print 'Not a valid dic entry' 
+
         # Has 'modify' button been clicked?
         if 'modify' in req:
-            print 'OK'
             response_form = DictForm()
-            print txt, trans
             # Is it a blank input?
             if txt and trans: 
                 response_form.data['text'] = txt
@@ -135,19 +140,22 @@ def modify_item(request, input_text):
                 form = DictForm()
         elif 'submit' in req:
             final_form = DictForm(req.copy())
-            print final_form.data['translation']
-            print form.is_valid()
-            if input_text:
+            if txt == input_text:
                 final_form.data['text'] = input_text 
-                print final_form.data['text']
-                print final_form.data['translation']
                 # Delete original.
                 Dict.objects.filter(text = input_text).delete()
                 # Save new.
                 final_form.save(commit=True)
-                # Return home
-                return HttpResponseRedirect('/rango/')
-
+            elif trans == input_text:
+                final_form.data['trans'] = input_text 
+                # Delete original.
+                Dict.objects.filter(translation = input_text).delete()
+                # Save new.
+                final_form.save(commit=True)
+            else:
+                print 'error'
+            # Return home
+            return HttpResponseRedirect('/rango/')
         else:
             # Not a translate req, display the form to enter details.
             form = DictForm()

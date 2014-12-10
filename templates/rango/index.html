@@ -27,11 +27,17 @@
 
 		{% csrf_token %}
 		{{ form.data.translation }}
-		
 		<input type="submit" name="modify" value="Modify" />
+		
 	    </form>
 
 	{% endif %}
 
     </body>
 </html>
+
+<style type="text/css">
+    #ranks li {
+	display: inline-block;
+    }
+</style>
