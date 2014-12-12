@@ -11,9 +11,10 @@
 
             {% csrf_token %}
             {{ form.text.errors }}
-            {{ form.data.text }}
+            {{ form.data.text}}
             <label><--></label>
-            {{ form.translation }}
+            {{ form.translation}}
+
             <input type="submit" name="submit" value="Add" />
 
         </form>

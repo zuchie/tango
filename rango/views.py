@@ -38,36 +38,50 @@ def translate_item(request):
     # GET
     else:
         # Get user request.
-        req = request.GET.copy()
+        req = request.GET
         form = DictForm(req)
+        response_form = DictForm(request.GET.copy())
 #        response_form = DictForm(initial = {'text': 'txt', 'translation': 'trans' })
 
         # Has 'translate' button been clicked?
         if 'translate' in req:
             # Get text from user input and strip leading/trailing whitespaces.
-            txt_in = form.data['text'].strip()
+            input_text = form.data['text'].strip()
 #            txt = form.striped_text
             # Is it a blank input?
-            if txt_in:
-                # Input text is not in Roman character and provided 'text' already in dictionary text field. Encode to utf-8 to make Chinese char show in Chinese.
-                if txt_in.encode('utf8').isalpha() == False and Dict.objects.filter(text = txt_in).exists() == True:
-                    txt_out = Dict.objects.get(text = txt_in).translation
-                    form.fields['text'].value = txt_in
-                    form.data['translation'] = txt_out 
-#                    print form.is_valid() # Why is form not valid here???
-                    template = 'rango/index.html'
+            if input_text:
+                # First letter(in case delimiters in string) of input text is not in Roman character and provided 'text' already in dictionary text field. Encode to utf-8 to make Chinese char show in Chinese.
+                if input_text.encode('utf8')[0].isalpha() == False:
+                    if Dict.objects.filter(text = input_text).exists() == True:
+                        output_text = Dict.objects.get(text = input_text).translation
+                        response_form.fields['text'].value = input_text 
+                        response_form.data['translation'] = output_text 
+#                        print form.is_valid() # Why is form not valid here???
+                        template = 'rango/index.html'
+                        return render_to_response(template, {'form': form, 'response_form': response_form}, context)
+                    else:
+                       # Add item into 'text' column. 
+                        response_form.data['text'] = input_text 
+                        response_form.data['translation'] = None 
+                        template = 'rango/add_item.html'
+                        return render_to_response(template, {'form': response_form}, context)
                 # Input text is in Roman character and provided 'text' already in dictionary translation field. is_alpha() cannot tell '/' or ',', so use regex instead here.
-                elif re.match(r'[a-zA-Z]', txt_in.encode('utf8')) and Dict.objects.filter(translation = txt_in).exists() == True:
-                    txt_out = Dict.objects.get(translation = txt_in).text
-                    form.fields['text'].value = txt_in
-                    form.data['translation'] = txt_out
-                    template = 'rango/index.html'
+                elif re.match(r'[a-zA-Z]', input_text.encode('utf8')):
+                    if Dict.objects.filter(translation = input_text).exists() == True:
+                        output_text = Dict.objects.get(translation = input_text).text
+                        response_form.data['translation'] = output_text 
+                        response_form.data['text'] = input_text 
+                        template = 'rango/index.html'
+                        return render_to_response(template, {'form': form, 'response_form': response_form}, context)
+                    else:
+                       # Add item into 'translation' column. 
+                        response_form.data['text'] = input_text 
+                        response_form.data['translation'] = None 
+                        template = 'rango/add_item.html'
+                        return render_to_response(template, {'form': response_form}, context)
                 # Text not in dic, add it into dic.
                 else: 
-                    form.data['text'] = txt_in
-                    template = 'rango/add_item.html'
-
-		return render_to_response(template, {'form': form}, context)
+                    print 'Not a valid input text.'
             # A blank input, show form.
             else:
                 form = DictForm()
@@ -88,7 +102,11 @@ def add_item(request, input_text):
     # A HTTP POST?
     if request.method == 'POST':
         form = DictForm(request.POST.copy())
-        form.data['text'] = input_text
+        if input_text.encode('utf8')[0].isalpha():
+            form.data['text'] = form.data['translation']
+            form.data['translation'] = input_text 
+        else:
+            form.data['text'] = input_text 
         # Have we been provided with a valid form?
         if form.is_valid():
             # Save the new category to the database.
@@ -116,11 +134,11 @@ def modify_item(request, input_text):
         req = request.POST
         form = DictForm(req)
 #        if Dict.objects.filter(translation = trans).exists() == True:
-        if input_text.encode('utf8').isalpha() == False and Dict.objects.filter(text = input_text).exists() == True:
+        if input_text.encode('utf8')[0].isalpha() == False and Dict.objects.filter(text = input_text).exists() == True: 
             txt = input_text
             trans = Dict.objects.get(text = input_text).translation
 
-        elif re.match(r'[a-zA-Z]', txt_in.encode('utf8')) and Dict.objects.filter(translation = txt_in).exists() == True:
+        elif re.match(r'[a-zA-Z]', input_text.encode('utf8')) and Dict.objects.filter(translation = input_text).exists() == True: 
             trans = input_text
             txt = Dict.objects.get(translation = input_text).text
         else:
@@ -131,8 +149,12 @@ def modify_item(request, input_text):
             response_form = DictForm()
             # Is it a blank input?
             if txt and trans: 
-                response_form.data['text'] = txt
-                response_form.data['translation'] = trans 
+                if input_text.encode('utf8')[0].isalpha(): 
+                    response_form.data['text'] = txt
+                    response_form.data['translation'] = trans 
+                else:
+                    response_form.data['text'] = trans 
+                    response_form.data['translation'] = txt 
                 template = 'rango/modify_item.html'
                 return render_to_response(template, {'form': response_form}, context)
             # A blank input, show form.
@@ -147,7 +169,8 @@ def modify_item(request, input_text):
                 # Save new.
                 final_form.save(commit=True)
             elif trans == input_text:
-                final_form.data['trans'] = input_text 
+                final_form.data['text'] = final_form.data['translation']
+                final_form.data['translation'] = input_text 
                 # Delete original.
                 Dict.objects.filter(translation = input_text).delete()
                 # Save new.

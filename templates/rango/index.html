@@ -14,7 +14,7 @@
         <form id="form" method="get" action="/rango/translate/">
 
             {% csrf_token %}
-	    {{ form.text }}
+            {{ form.text }}
 
             <input type="submit" name="translate" value="Translate" />
         </form>
@@ -23,10 +23,10 @@
 
 	{% if form.data.text %}
 
-	    <form id="form" method="post" action="/rango/modify/{{ form.data.translation }}/">
+	    <form id="form" method="post" action="/rango/modify/{{ response_form.data.translation }}/">
 
 		{% csrf_token %}
-		{{ form.data.translation }}
+		{{ response_form.data.translation }}
 		<input type="submit" name="modify" value="Modify" />
 		
 	    </form>
