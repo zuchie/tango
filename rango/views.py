@@ -52,7 +52,7 @@ def translate_item(request):
             if input_text:
                 # First letter(in case delimiters in string) of input text is not in Roman character and provided 'text' already in dictionary text field. Encode to utf-8 to make Chinese char show in Chinese.
                 if input_text.encode('utf8')[0].isalpha() == False:
-                    if Dict.objects.filter(text = input_text).exists() == True:
+                    if Dict.objects.filter(text__regex = r'[\/|\s]+input_text[\/|\s]+').exists() == True:
                         output_text = Dict.objects.get(text = input_text).translation
                         response_form.fields['text'].value = input_text 
                         response_form.data['translation'] = output_text 
@@ -67,8 +67,13 @@ def translate_item(request):
                         return render_to_response(template, {'form': response_form}, context)
                 # Input text is in Roman character and provided 'text' already in dictionary translation field. is_alpha() cannot tell '/' or ',', so use regex instead here.
                 elif re.match(r'[a-zA-Z]', input_text.encode('utf8')):
-                    if Dict.objects.filter(translation = input_text).exists() == True:
-                        output_text = Dict.objects.get(translation = input_text).text
+                    # Search single word, or in the beginning/middle/end of entry column.
+                    if Dict.objects.filter(translation__regex = r'^%s$|\/%s\/|^%s\/|\/%s$' %(input_text, input_text, input_text, input_text)).exists() == True:
+                        dics = Dict.objects.filter(translation__regex = r'^%s$|\/%s\/|^%s\/|\/%s$' %(input_text, input_text, input_text, input_text))
+                        print dics.count()
+                        for dic in dics:
+                            print dic.text, dic.translation
+                        output_text = Dict.objects.get(translation__regex = r'^%s$|\/%s\/|^%s\/|\/%s$' %(input_text, input_text, input_text, input_text)).text
                         response_form.data['translation'] = output_text 
                         response_form.data['text'] = input_text 
                         template = 'rango/index.html'
@@ -134,11 +139,11 @@ def modify_item(request, input_text):
         req = request.POST
         form = DictForm(req)
 #        if Dict.objects.filter(translation = trans).exists() == True:
-        if input_text.encode('utf8')[0].isalpha() == False and Dict.objects.filter(text = input_text).exists() == True: 
+        if input_text.encode('utf8')[0].isalpha() == False and Dict.objects.filter(text__regex = r'[\/|\s]+input_text[\/|\s]+').exists() == True: 
             txt = input_text
             trans = Dict.objects.get(text = input_text).translation
 
-        elif re.match(r'[a-zA-Z]', input_text.encode('utf8')) and Dict.objects.filter(translation = input_text).exists() == True: 
+        elif re.match(r'[a-zA-Z]', input_text.encode('utf8')) and Dict.objects.filter(translation_contains = input_text).exists() == True: 
             trans = input_text
             txt = Dict.objects.get(translation = input_text).text
         else:
@@ -165,14 +170,14 @@ def modify_item(request, input_text):
             if txt == input_text:
                 final_form.data['text'] = input_text 
                 # Delete original.
-                Dict.objects.filter(text = input_text).delete()
+                Dict.objects.filter(text_contains = input_text).delete()
                 # Save new.
                 final_form.save(commit=True)
             elif trans == input_text:
                 final_form.data['text'] = final_form.data['translation']
                 final_form.data['translation'] = input_text 
                 # Delete original.
-                Dict.objects.filter(translation = input_text).delete()
+                Dict.objects.filter(translation_contains = input_text).delete()
                 # Save new.
                 final_form.save(commit=True)
             else:
