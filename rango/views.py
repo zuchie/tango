@@ -52,8 +52,8 @@ def translate_item(request):
             if input_text:
                 # First letter(in case delimiters in string) of input text is not in Roman character and provided 'text' already in dictionary text field. Encode to utf-8 to make Chinese char show in Chinese.
                 if input_text.encode('utf8')[0].isalpha() == False:
-                    if Dict.objects.filter(text__regex = r'[\/|\s]+input_text[\/|\s]+').exists() == True:
-                        output_text = Dict.objects.get(text = input_text).translation
+                    if Dict.objects.filter(text__regex = r'^%s$|\/%s\/|^%s\/|\/%s$' %(input_text, input_text, input_text, input_text)).exists() == True:
+                        output_text = Dict.objects.get(text__regex = r'^%s$|\/%s\/|^%s\/|\/%s$' %(input_text, input_text, input_text, input_text)).translation
                         response_form.fields['text'].value = input_text 
                         response_form.data['translation'] = output_text 
 #                        print form.is_valid() # Why is form not valid here???
@@ -116,7 +116,6 @@ def add_item(request, input_text):
         if form.is_valid():
             # Save the new category to the database.
             form.save(commit=True)
-
             # The user will be shown the homepage.
             return HttpResponseRedirect('/rango')
         else:
